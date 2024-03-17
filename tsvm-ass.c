@@ -235,8 +235,10 @@ ssize_t compile(char* input_buffer, size_t input_buffer_size,
             *(uint16_t*)&output_buffer[labels.its[i].uses.its[j]] =
                 labels.its[i].location;
         }
+        free(labels.its[i].uses.its);
         free(labels.its[i].string);
     }
+    free(labels.its);
 
     return out_size;
 }
