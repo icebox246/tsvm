@@ -74,6 +74,7 @@ addrs are of size 2
 ## Compiler head movement:
 
 `]offset` - sets writehead to specified offset
+`>offset` - move writehead by specified offset
 
 ## Memory mapped IO:
 

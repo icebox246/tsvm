@@ -112,7 +112,7 @@ ssize_t compile(char* input_buffer, size_t input_buffer_size,
         }
 
         // offset
-        if (!consumed && word[0] == ']') {
+        if (!consumed && (word[0] == ']' || word[0] == '>')) {
             bool valid;
             size_t value = hnum(word + 1, wordlen - 1, &valid);
             if (!valid || value > MAX_SIZE) {
@@ -122,7 +122,14 @@ ssize_t compile(char* input_buffer, size_t input_buffer_size,
                     line, col, word + 1);
                 return -1;
             }
-            out_cursor = value;
+            switch (word[0]) {
+                case ']':
+                    out_cursor = value;
+                    break;
+                case '>':
+                    out_cursor += value;
+                    break;
+            }
             consumed = true;
         }
 

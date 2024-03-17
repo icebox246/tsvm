@@ -60,11 +60,15 @@ bool interpret(VM* vm) {
             case O_DRP:
                 POP(1 << ss);
                 break;
-            case O_SWP:
-                UNIMPLEMENTED("SWP");
-                break;
+            case O_SWP: {
+                uint64_t b = POP(1 << ss);
+                uint64_t a = POP(1 << ss);
+                PUSH(1 << ss, b);
+                PUSH(1 << ss, a);
+            } break;
             case O_OVR:
-                UNIMPLEMENTED("OVR");
+                vm->s -= 1 << ss;
+                memcpy(&vm->m[vm->s], &vm->m[vm->s + (2 << ss)], 1 << ss);
                 break;
             case O_ADD: {
                 uint64_t b = POP(1 << ss);
@@ -87,21 +91,27 @@ bool interpret(VM* vm) {
             case O_MUL:
                 UNIMPLEMENTED("MUL");
                 break;
-            case O_SHR:
-                UNIMPLEMENTED("SHR");
-                break;
+            case O_SHR: {
+                uint8_t b = POP(1);
+                uint64_t a = POP(1 << ss);
+                PUSH(1 << ss, a << b);
+            } break;
             case O_SHL:
                 UNIMPLEMENTED("SHL");
                 break;
             case O_XOR:
                 UNIMPLEMENTED("XOR");
                 break;
-            case O_AND:
-                UNIMPLEMENTED("AND");
-                break;
-            case O_ORR:
-                UNIMPLEMENTED("ORR");
-                break;
+            case O_AND: {
+                uint64_t b = POP(1 << ss);
+                uint64_t a = POP(1 << ss);
+                PUSH(1 << ss, a & b);
+            } break;
+            case O_ORR: {
+                uint64_t b = POP(1 << ss);
+                uint64_t a = POP(1 << ss);
+                PUSH(1 << ss, a | b);
+            } break;
             case O_STM: {
                 uint16_t addr = POP(2);
                 memcpy(&vm->m[addr], &vm->m[vm->s], 1 << ss);

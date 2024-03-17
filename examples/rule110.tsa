@@ -1,0 +1,40 @@
+]0012 :COUT
+
+]100
+    1 @buffer0 3f#2 ADD2 STM
+    @buffer0 @buffer1
+    :loop @iterations LDM @finished JLZ
+        SWP2 OVR2 @backbuffer STM2 // save ptr to backbuffer
+        @iterations LDM 1 SUB @finished JLZ // finish when iterations run out
+        0#2 @x STM2 // reset x to 0
+        DUP2 LDM2 // lookup window
+        :x-loop
+            3f#2 @x LDM2 SUB2 @x-finished JLZ2 // finish when x reaches 40
+            1 SHR2 // move window to the right
+            OVR2 @x LDM2 1#2 ADD2 ADD2 LDM // load byte from x offset in buffer
+            ORR // apply to lookup window
+            7#2 AND2 // mask three items
+            0 // 0 to store
+            OVR 1 SWP SHR // create selecting mask
+            6e // 110
+            AND 
+            1 SUB @store JLZ // store 0 on jump
+                1 ADD // make stored value 1
+            :store
+            DUP 22 ADD @COUT STM // print character to screen
+            @backbuffer LDM2 @x LDM2 ADD2 STM // store 0/1 on backbuffer
+            @x LDM2 1#2 ADD2 @x STM2 // increase x by 1
+        @x-loop JMP
+        :x-finished DRP2 // drop lookup window
+        0a @COUT STM
+        @iterations LDM 1 SUB @iterations STM // reduce iterations by 1
+    @loop JMP
+    :finished
+    DRP4
+    HLT
+
+:iterations '40
+:x '0#2
+:backbuffer '0#2
+:buffer0 >43 // 40 + 3 padding
+:buffer1 >43

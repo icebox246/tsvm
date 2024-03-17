@@ -20,7 +20,7 @@ int main() {
     fprintf(of, "highligh link TSAImm Character\n");
 
     // Offsets
-    fprintf(of, "syntax match TSAOffset /\\][0-9a-fA-F]\\+/\n");
+    fprintf(of, "syntax match TSAOffset /[\\]>][0-9a-fA-F]\\+/\n");
     fprintf(of, "highligh link TSAOffset PreProc\n");
 
     // Mnemonics
