@@ -1,0 +1,14 @@
+]0012 :COUT       // Special address of char out device
+
+]0100 :entry
+    @message      // Push message addr onto stack
+    :loop
+        DUP2 LDM  // Load byte from memory
+        DUP 1 SUB @end-loop JLZ // If byte is 0 end loop
+        @COUT STM // Print character
+        1#2 ADD2  // Increment addr
+        @loop JMP // Go to next iteration of loop
+    :end-loop DRP DRP2 // Drop loaded byte and message addr
+    HLT           // Gracefully end program
+
+:message "Hello, TSVM!" '0a '00 // Prepared message
